@@ -1,18 +1,29 @@
 import streamlit as st
 import pickle
-import numpy as np
 
+# Title
 st.title("🏡 House Price Prediction")
 
-# Load model
-model = pickle.load(open("model.pkl", "rb"))
+# Load the trained model
+with open("model.pkl", "rb") as f:
+    model = pickle.load(f)
 
-# Input fields
-area = st.number_input("Area (sq ft)", min_value=500, max_value=10000, value=1200)
-rooms = st.number_input("Number of Rooms", min_value=1, max_value=10, value=3)
-bathrooms = st.number_input("Number of Bathrooms", min_value=1, max_value=5, value=2)
+# Input fields for all 8 features
+medinc = st.number_input("Median Income", value=5.0)
+house_age = st.number_input("House Age", value=30)
+ave_rooms = st.number_input("Average Rooms", value=6.0)
+ave_bedrms = st.number_input("Average Bedrooms", value=2.0)
+population = st.number_input("Population", value=1000)
+ave_occup = st.number_input("Average Occupancy", value=3.0)
+latitude = st.number_input("Latitude", value=34.0)
+longitude = st.number_input("Longitude", value=-118.0)
 
-if st.button("Predict Price"):
-    features = np.array([[area, rooms, bathrooms]])
+# Combine inputs into feature array
+features = [[medinc, house_age, ave_rooms, ave_bedrms, population, ave_occup, latitude, longitude]]
+
+# Predict button
+if st.button("Predict"):
     price = model.predict(features)[0]
-    st.success(f"Estimated Price: ₹ {price:,.2f}")
+    st.write(f"Predicted House Price: {price}")
+
+
